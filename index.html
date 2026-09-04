@@ -1,430 +1,251 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#111827">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Town Watch">
-
-  <title>Town Watch</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      background: #f3f4f6;
-      color: #111827;
-      min-height: 100vh;
-    }
-
-    .app {
-      max-width: 520px;
-      min-height: 100vh;
-      margin: 0 auto;
-      background: #ffffff;
-    }
-
-    header {
-      background: #111827;
-      color: white;
-      padding: 22px 20px 20px;
-      text-align: center;
-    }
-
-    .logo {
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
-
-    .subtitle {
-      margin-top: 5px;
-      font-size: 14px;
-      opacity: 0.7;
-    }
-
-    main {
-      padding: 20px;
-    }
-
-    .business-card {
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-
-    .business-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #6b7280;
-      font-weight: 700;
-    }
-
-    .business-name {
-      font-size: 20px;
-      font-weight: 750;
-      margin-top: 4px;
-    }
-
-    .staff-name {
-      color: #6b7280;
-      margin-top: 3px;
-      font-size: 14px;
-    }
-
-    .status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 12px;
-      font-size: 13px;
-      color: #15803d;
-      font-weight: 600;
-    }
-
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      background: #22c55e;
-      border-radius: 50%;
-    }
-
-    .section-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin: 24px 0 10px;
-    }
-
-    button {
-      width: 100%;
-      border: 0;
-      border-radius: 16px;
-      font-family: inherit;
-      font-weight: 750;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-
-    .help-button {
-      background: #f59e0b;
-      color: #111827;
-      min-height: 115px;
-      font-size: 25px;
-      box-shadow: 0 5px 0 #b45309;
-      margin-bottom: 18px;
-    }
-
-    .help-button:active {
-      transform: translateY(4px);
-      box-shadow: 0 1px 0 #b45309;
-    }
-
-    .emergency-button {
-      background: #dc2626;
-      color: white;
-      min-height: 76px;
-      font-size: 19px;
-      box-shadow: 0 4px 0 #991b1b;
-    }
-
-    .emergency-button:active {
-      transform: translateY(3px);
-      box-shadow: 0 1px 0 #991b1b;
-    }
-
-    .ok-button {
-      background: #16a34a;
-      color: white;
-      min-height: 64px;
-      font-size: 17px;
-      margin-top: 12px;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .incident-screen {
-      text-align: center;
-    }
-
-    .back {
-      background: transparent;
-      color: #4b5563;
-      width: auto;
-      padding: 8px;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-
-    .incident-title {
-      font-size: 26px;
-      font-weight: 800;
-      margin: 10px 0 6px;
-    }
-
-    .incident-subtitle {
-      color: #6b7280;
-      margin-bottom: 22px;
-    }
-
-    .incident-option {
-      background: #f9fafb;
-      border: 2px solid #e5e7eb;
-      min-height: 66px;
-      margin-bottom: 10px;
-      font-size: 17px;
-      color: #111827;
-    }
-
-    .incident-option:active {
-      background: #e5e7eb;
-    }
-
-    .confirm-screen {
-      text-align: center;
-      padding-top: 20px;
-    }
-
-    .alert-icon {
-      font-size: 64px;
-      margin-bottom: 10px;
-    }
-
-    .confirm-title {
-      font-size: 29px;
-      font-weight: 850;
-      margin-bottom: 8px;
-    }
-
-    .confirm-text {
-      color: #6b7280;
-      line-height: 1.5;
-      margin-bottom: 24px;
-    }
-
-    .alert-summary {
-      text-align: left;
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 18px;
-    }
-
-    .summary-row {
-      margin-bottom: 10px;
-    }
-
-    .summary-row:last-child {
-      margin-bottom: 0;
-    }
-
-    .summary-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      color: #9a3412;
-      font-weight: 700;
-      letter-spacing: 0.7px;
-    }
-
-    .summary-value {
-      font-size: 16px;
-      font-weight: 650;
-      margin-top: 2px;
-    }
-
-    footer {
-      text-align: center;
-      color: #9ca3af;
-      font-size: 11px;
-      padding: 25px 20px 35px;
-    }
-  </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Town Watch">
+<title>Town Watch</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:#f3f4f6;color:#111827;min-height:100vh}
+.app{max-width:520px;min-height:100vh;margin:0 auto;background:#fff}
+header{background:#111827;color:#fff;padding:22px 20px 20px;text-align:center}
+.logo{font-size:30px;font-weight:800;letter-spacing:-1px}.subtitle{margin-top:5px;font-size:14px;opacity:.7}
+main{padding:20px}.hidden{display:none!important}
+.card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:16px;padding:16px;margin-bottom:16px}
+label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px}
+input{width:100%;padding:14px;border:1px solid #d1d5db;border-radius:12px;font:inherit}
+button{width:100%;border:0;border-radius:16px;font-family:inherit;font-weight:750;cursor:pointer;touch-action:manipulation}
+.primary{background:#111827;color:#fff;min-height:58px;font-size:17px;margin-top:18px}
+.secondary{background:#e5e7eb;color:#111827;min-height:52px;font-size:15px;margin-top:10px}
+.business-card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:16px;padding:16px;margin-bottom:20px}
+.business-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#6b7280;font-weight:700}
+.business-name{font-size:20px;font-weight:750;margin-top:4px}.staff-name{color:#6b7280;margin-top:3px;font-size:14px}
+.status{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;font-weight:600}
+.dot{width:9px;height:9px;background:#22c55e;border-radius:50%}
+.section-title{font-size:15px;font-weight:700;margin:22px 0 10px}
+.help-button{background:#f59e0b;color:#111827;min-height:115px;font-size:25px;box-shadow:0 5px 0 #b45309;margin-bottom:18px}
+.help-button:active{transform:translateY(4px);box-shadow:0 1px 0 #b45309}
+.emergency-button{background:#dc2626;color:#fff;min-height:76px;font-size:19px;box-shadow:0 4px 0 #991b1b}
+.emergency-button:active{transform:translateY(3px);box-shadow:0 1px 0 #991b1b}
+.ok-button{background:#16a34a;color:#fff;min-height:64px;font-size:17px;margin-top:12px}
+.option{background:#f9fafb;border:2px solid #e5e7eb;min-height:64px;margin-bottom:10px;font-size:17px;color:#111827}
+.back{background:transparent;color:#4b5563;width:auto;padding:8px;font-size:14px;margin-bottom:10px}
+.center{text-align:center}.title{font-size:27px;font-weight:800;margin:10px 0 6px}.muted{color:#6b7280;line-height:1.45}
+.alert-summary{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:16px;margin:18px 0}
+.row{margin-bottom:10px}.row:last-child{margin-bottom:0}.small{font-size:11px;text-transform:uppercase;color:#9a3412;font-weight:700;letter-spacing:.7px}.value{font-size:16px;font-weight:650;margin-top:2px}
+.incident{background:#fff7ed;border:1px solid #fed7aa;border-radius:16px;padding:15px;margin-bottom:10px}.incident strong{display:block}.incident .meta{font-size:13px;color:#6b7280;margin-top:5px}
+.notice{padding:12px;border-radius:12px;background:#f3f4f6;margin:10px 0;font-size:14px}
+.error{background:#fee2e2;color:#991b1b;padding:12px;border-radius:12px;margin-top:12px;font-size:14px}
+.success{background:#dcfce7;color:#166534;padding:12px;border-radius:12px;margin-top:12px;font-size:14px}
+.tabs{display:flex;gap:8px;margin-bottom:16px}.tabs button{min-height:46px;background:#e5e7eb;font-size:14px}.tabs button.active{background:#111827;color:#fff}
+footer{text-align:center;color:#9ca3af;font-size:11px;padding:25px 20px 35px}
+</style>
 </head>
-
 <body>
-
 <div class="app">
+<header><div class="logo">TOWN WATCH</div><div class="subtitle">Helping local businesses look after each other</div></header>
+<main>
 
-  <header>
-    <div class="logo">TOWN WATCH</div>
-    <div class="subtitle">Helping local businesses look after each other</div>
-  </header>
+<section id="authScreen">
+  <div class="tabs">
+    <button id="loginTab" class="active" onclick="showAuth('login')">Sign in</button>
+    <button id="registerTab" onclick="showAuth('register')">Register</button>
+  </div>
 
-  <main>
+  <div id="loginForm" class="card">
+    <div class="title">Welcome back</div>
+    <div class="muted">Sign in once and Town Watch will remember you on this device.</div>
+    <label>Email</label><input id="loginEmail" type="email" autocomplete="email">
+    <label>Password</label><input id="loginPassword" type="password" autocomplete="current-password">
+    <button class="primary" onclick="login()">SIGN IN</button>
+    <div id="loginMessage"></div>
+  </div>
 
-```
-<!-- HOME SCREEN -->
-<section id="homeScreen">
+  <div id="registerForm" class="card hidden">
+    <div class="title">Join Town Watch</div>
+    <div class="muted">Set this up once. When you need help later, there will be no typing.</div>
+    <label>Business name</label><input id="regBusiness" autocomplete="organization">
+    <label>Business address</label><input id="regAddress" autocomplete="street-address">
+    <label>Your name</label><input id="regName" autocomplete="name">
+    <label>Email</label><input id="regEmail" type="email" autocomplete="email">
+    <label>Password</label><input id="regPassword" type="password" autocomplete="new-password">
+    <button class="primary" onclick="register()">REGISTER</button>
+    <div id="registerMessage"></div>
+  </div>
+</section>
 
+<section id="homeScreen" class="hidden">
   <div class="business-card">
     <div class="business-label">Currently signed in</div>
-    <div class="business-name">The Old Coffee House</div>
-    <div class="staff-name">Gary · Staff member</div>
-
-    <div class="status">
-      <span class="status-dot"></span>
-      Working now
-    </div>
+    <div id="businessName" class="business-name"></div>
+    <div id="staffName" class="staff-name"></div>
+    <div class="status"><span id="statusDot" class="dot"></span><span id="workStatus">Working now</span></div>
   </div>
-
   <div class="section-title">Need assistance?</div>
-
-  <button class="help-button" onclick="showIncidentScreen()">
-    🟠<br>
-    I NEED HELP
-  </button>
-
-  <button class="emergency-button" onclick="emergency()">
-    🔴 &nbsp; EMERGENCY · CALL 999
-  </button>
-
+  <button class="help-button" onclick="showIncidentScreen()">🟠<br>I NEED HELP</button>
+  <button class="emergency-button" onclick="emergency()">🔴 &nbsp; EMERGENCY · CALL 999</button>
   <div class="section-title">Your status</div>
-
-  <button class="ok-button" onclick="showStatus()">
-    🟢 &nbsp; I'M OK
-  </button>
-
+  <button id="workingButton" class="ok-button" onclick="toggleWorking()">🟢 &nbsp; I'M WORKING</button>
+  <button class="secondary" onclick="loadActiveIncidents()">VIEW ACTIVE ALERTS</button>
+  <button class="secondary" onclick="signOut()">SIGN OUT</button>
+  <div id="homeMessage"></div>
 </section>
 
-
-<!-- INCIDENT SCREEN -->
-<section id="incidentScreen" class="incident-screen hidden">
-
+<section id="incidentScreen" class="center hidden">
   <button class="back" onclick="goHome()">← Back</button>
-
-  <div class="incident-title">What's happening?</div>
-
-  <div class="incident-subtitle">
-    Tap the option that best describes the situation.
-  </div>
-
-  <button class="incident-option" onclick="sendAlert('Person causing concern')">
-    👤 &nbsp; Person causing concern
-  </button>
-
-  <button class="incident-option" onclick="sendAlert('Aggressive behaviour')">
-    😡 &nbsp; Aggressive behaviour
-  </button>
-
-  <button class="incident-option" onclick="sendAlert('Suspicious behaviour')">
-    👀 &nbsp; Suspicious behaviour
-  </button>
-
-  <button class="incident-option" onclick="sendAlert('Medical issue')">
-    🏥 &nbsp; Medical issue
-  </button>
-
-  <button class="incident-option" onclick="sendAlert('Fire')">
-    🔥 &nbsp; Fire
-  </button>
-
-  <button class="incident-option" onclick="sendAlert('Other')">
-    ❓ &nbsp; Other
-  </button>
-
+  <div class="title">What's happening?</div>
+  <div class="muted" style="margin-bottom:20px">Tap the option that best describes the situation.</div>
+  <button class="option" onclick="sendAlert('Person causing concern')">👤 &nbsp; Person causing concern</button>
+  <button class="option" onclick="sendAlert('Aggressive behaviour')">😡 &nbsp; Aggressive behaviour</button>
+  <button class="option" onclick="sendAlert('Suspicious behaviour')">👀 &nbsp; Suspicious behaviour</button>
+  <button class="option" onclick="sendAlert('Medical issue')">🏥 &nbsp; Medical issue</button>
+  <button class="option" onclick="sendAlert('Fire')">🔥 &nbsp; Fire</button>
+  <button class="option" onclick="sendAlert('Other')">❓ &nbsp; Other</button>
+  <div id="incidentMessage"></div>
 </section>
 
-
-<!-- CONFIRMATION SCREEN -->
-<section id="confirmScreen" class="confirm-screen hidden">
-
-  <div class="alert-icon">🚨</div>
-
-  <div class="confirm-title">Alert sent</div>
-
-  <div class="confirm-text">
-    Participating businesses nearby have been alerted.
-  </div>
-
+<section id="confirmScreen" class="center hidden">
+  <div style="font-size:64px">🚨</div>
+  <div class="title">Alert sent</div>
+  <div class="muted">The Town Watch network has been alerted.</div>
   <div class="alert-summary">
-
-    <div class="summary-row">
-      <div class="summary-label">Business</div>
-      <div class="summary-value">The Old Coffee House</div>
-    </div>
-
-    <div class="summary-row">
-      <div class="summary-label">Location</div>
-      <div class="summary-value">12 Market Street</div>
-    </div>
-
-    <div class="summary-row">
-      <div class="summary-label">Reported by</div>
-      <div class="summary-value">Gary</div>
-    </div>
-
-    <div class="summary-row">
-      <div class="summary-label">Issue</div>
-      <div class="summary-value" id="alertType">Aggressive behaviour</div>
-    </div>
-
+    <div class="row"><div class="small">Business</div><div id="alertBusiness" class="value"></div></div>
+    <div class="row"><div class="small">Location</div><div id="alertLocation" class="value"></div></div>
+    <div class="row"><div class="small">Reported by</div><div id="alertReporter" class="value"></div></div>
+    <div class="row"><div class="small">Issue</div><div id="alertType" class="value"></div></div>
   </div>
-
-  <button class="ok-button" onclick="resolveAlert()">
-    ✓ &nbsp; ALL CLEAR
-  </button>
-
+  <button class="ok-button" onclick="resolveMyAlert()">✓ &nbsp; ALL CLEAR</button>
 </section>
-```
 
-  </main>
+<section id="alertsScreen" class="hidden">
+  <button class="back" onclick="goHome()">← Back</button>
+  <div class="title">Active alerts</div>
+  <div id="alertsList" style="margin-top:16px"></div>
+</section>
 
-  <footer>
-    Town Watch · For participating local businesses
-  </footer>
-
+</main>
+<footer>Town Watch · For participating local businesses</footer>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = "https://ccvolwuiiopupnpkmwvs.supabase.co";
+const SUPABASE_KEY = "sb_publishable_QqnIdg_wbSARaigWEf4viA_bkdv8dO2";
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  function showIncidentScreen() {
-    document.getElementById("homeScreen").classList.add("hidden");
-    document.getElementById("incidentScreen").classList.remove("hidden");
+let currentStaff = null;
+let currentBusiness = null;
+let myActiveIncident = null;
+
+function $(id){return document.getElementById(id)}
+function message(id,text,type="error"){ $(id).innerHTML = `<div class="${type}">${text}</div>` }
+
+function showAuth(mode){
+  $("loginForm").classList.toggle("hidden", mode!=="login");
+  $("registerForm").classList.toggle("hidden", mode!=="register");
+  $("loginTab").classList.toggle("active", mode==="login");
+  $("registerTab").classList.toggle("active", mode==="register");
+}
+
+async function register(){
+  const business=$("regBusiness").value.trim(), address=$("regAddress").value.trim(), name=$("regName").value.trim(), email=$("regEmail").value.trim(), password=$("regPassword").value;
+  if(!business||!address||!name||!email||!password){message("registerMessage","Please complete all fields.");return}
+  if(password.length<6){message("registerMessage","Password must be at least 6 characters.");return}
+  const {data,error}=await db.auth.signUp({email,password});
+  if(error){message("registerMessage",error.message);return}
+  if(!data.user){message("registerMessage","Registration started. Check your email to continue.","success");return}
+  const {data:b,error:be}=await db.from("businesses").insert({name:business,address}).select().single();
+  if(be){message("registerMessage","Account created, but the business could not be saved: "+be.message);return}
+  const {error:se}=await db.from("staff").insert({auth_user_id:data.user.id,business_id:b.id,name,working:true,approved:true});
+  if(se){message("registerMessage","Business created, but your staff profile could not be saved: "+se.message);return}
+  message("registerMessage","You're registered. Signing you in now.","success");
+  await loadUser();
+}
+
+async function login(){
+  const email=$("loginEmail").value.trim(), password=$("loginPassword").value;
+  if(!email||!password){message("loginMessage","Enter your email and password.");return}
+  const {error}=await db.auth.signInWithPassword({email,password});
+  if(error){message("loginMessage",error.message);return}
+  await loadUser();
+}
+
+async function loadUser(){
+  const {data:{user}}=await db.auth.getUser();
+  if(!user){showAuth("login");return}
+  const {data:staff,error}=await db.from("staff").select("id,name,working,business_id,approved,businesses(id,name,address)").eq("auth_user_id",user.id).maybeSingle();
+  if(error||!staff){message("loginMessage","Your account exists but your Town Watch profile could not be found. "+(error?.message||""));return}
+  if(!staff.approved){message("loginMessage","Your Town Watch registration is awaiting approval.");return}
+  currentStaff=staff;
+  currentBusiness=staff.businesses;
+  $("businessName").textContent=currentBusiness.name;
+  $("staffName").textContent=staff.name+" · Staff member";
+  updateWorkUI();
+  showOnly("homeScreen");
+  await findMyActiveIncident();
+}
+
+function showOnly(id){
+  ["authScreen","homeScreen","incidentScreen","confirmScreen","alertsScreen"].forEach(x=>$(x).classList.add("hidden"));
+  $(id).classList.remove("hidden");
+}
+function goHome(){showOnly("homeScreen")}
+function showIncidentScreen(){showOnly("incidentScreen")}
+function updateWorkUI(){
+  $("workStatus").textContent=currentStaff.working?"Working now":"Not working";
+  $("statusDot").style.background=currentStaff.working?"#22c55e":"#9ca3af";
+  $("workingButton").textContent=currentStaff.working?"🟢  I'M WORKING":"⚪  I'M NOT WORKING";
+}
+async function toggleWorking(){
+  const next=!currentStaff.working;
+  const {error}=await db.from("staff").update({working:next}).eq("id",currentStaff.id);
+  if(error){message("homeMessage",error.message);return}
+  currentStaff.working=next;updateWorkUI();
+}
+async function sendAlert(type){
+  const {data,error}=await db.from("incidents").insert({business_id:currentBusiness.id,staff_id:currentStaff.id,incident_type:type,status:"active"}).select().single();
+  if(error){message("incidentMessage",error.message);return}
+  myActiveIncident=data;
+  $("alertBusiness").textContent=currentBusiness.name;
+  $("alertLocation").textContent=currentBusiness.address;
+  $("alertReporter").textContent=currentStaff.name;
+  $("alertType").textContent=type;
+  showOnly("confirmScreen");
+}
+async function findMyActiveIncident(){
+  const {data}=await db.from("incidents").select("*").eq("staff_id",currentStaff.id).eq("status","active").order("created_at",{ascending:false}).limit(1).maybeSingle();
+  myActiveIncident=data||null;
+  if(myActiveIncident){
+    $("alertBusiness").textContent=currentBusiness.name;
+    $("alertLocation").textContent=currentBusiness.address;
+    $("alertReporter").textContent=currentStaff.name;
+    $("alertType").textContent=myActiveIncident.incident_type;
+    showOnly("confirmScreen");
   }
-
-  function goHome() {
-    document.getElementById("incidentScreen").classList.add("hidden");
-    document.getElementById("confirmScreen").classList.add("hidden");
-    document.getElementById("homeScreen").classList.remove("hidden");
-  }
-
-  function sendAlert(type) {
-    document.getElementById("incidentScreen").classList.add("hidden");
-    document.getElementById("confirmScreen").classList.remove("hidden");
-
-    document.getElementById("alertType").textContent = type;
-  }
-
-  function resolveAlert() {
-    alert("All clear. The incident has been closed.");
-    goHome();
-  }
-
-  function showStatus() {
-    alert("You're marked as working and available.");
-  }
-
-  function emergency() {
-    if (confirm("For an immediate emergency, call 999. Continue to the phone dialler?")) {
-      window.location.href = "tel:999";
-    }
-  }
-
+}
+async function resolveMyAlert(){
+  if(!myActiveIncident){goHome();return}
+  const {error}=await db.from("incidents").update({status:"resolved",resolved_at:new Date().toISOString()}).eq("id",myActiveIncident.id);
+  if(error){alert(error.message);return}
+  myActiveIncident=null;goHome();
+}
+async function loadActiveIncidents(){
+  const {data,error}=await db.from("incidents").select("id,incident_type,status,created_at,businesses(name,address),staff(name)").eq("status","active").order("created_at",{ascending:false});
+  if(error){message("alertsList",error.message);showOnly("alertsScreen");return}
+  const list=data||[];
+  $("alertsList").innerHTML=list.length?list.map(i=>`<div class="incident"><strong>🚨 ${escapeHtml(i.incident_type)}</strong><div>${escapeHtml(i.businesses?.name||"Unknown business")}</div><div>${escapeHtml(i.businesses?.address||"")}</div><div class="meta">Reported by ${escapeHtml(i.staff?.name||"Staff member")} · ${new Date(i.created_at).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})}</div></div>`).join(""):`<div class="notice">There are currently no active alerts.</div>`;
+  showOnly("alertsScreen");
+}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function emergency(){window.location.href="tel:999"}
+async function signOut(){await db.auth.signOut();currentStaff=null;currentBusiness=null;showOnly("authScreen");showAuth("login")}
+db.auth.onAuthStateChange((_event)=>{if(_event==="SIGNED_IN")loadUser()});
+loadUser();
 </script>
-
 </body>
 </html>
