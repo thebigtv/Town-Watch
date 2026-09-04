@@ -78,6 +78,29 @@ footer{text-align:center;color:#9ca3af;font-size:11px;padding:25px 20px 35px}
   </div>
 </section>
 
+
+<section id="setupScreen" class="hidden">
+  <div class="card">
+    <div class="title">Finish setting up</div>
+    <div class="muted">
+      Your email account is confirmed. We just need your Town Watch details.
+      This is the last time you'll need to type them.
+    </div>
+
+    <label>Business name</label>
+    <input id="setupBusiness" autocomplete="organization">
+
+    <label>Business address</label>
+    <input id="setupAddress" autocomplete="street-address">
+
+    <label>Your name</label>
+    <input id="setupName" autocomplete="name">
+
+    <button class="primary" onclick="finishSetup()">FINISH SETUP</button>
+    <div id="setupMessage"></div>
+  </div>
+</section>
+
 <section id="homeScreen" class="hidden">
   <div class="business-card">
     <div class="business-label">Currently signed in</div>
@@ -232,14 +255,13 @@ async function loadUser(){
       try{
         const pending=JSON.parse(raw);
         if(pending.email && pending.email.toLowerCase()===String(user.email||"").toLowerCase()){
-          message("loginMessage","Your email is confirmed. Setting up your Town Watch profile...","success");
-          const ok=await finishRegistration(user,pending);
-          if(ok){await loadUser();}
-          return;
+          $("setupBusiness").value=pending.business||"";
+          $("setupAddress").value=pending.address||"";
+          $("setupName").value=pending.name||"";
         }
       }catch(e){}
     }
-    message("loginMessage","Your account exists, but your Town Watch profile has not been set up yet.");
+    showOnly("setupScreen");
     return;
   }
 
@@ -253,8 +275,52 @@ async function loadUser(){
   await findMyActiveIncident();
 }
 
+
+async function finishSetup(){
+  const business=$("setupBusiness").value.trim();
+  const address=$("setupAddress").value.trim();
+  const name=$("setupName").value.trim();
+
+  if(!business||!address||!name){
+    message("setupMessage","Please complete all three fields.");
+    return;
+  }
+
+  const {data:{user}}=await db.auth.getUser();
+  if(!user){
+    showAuth("login");
+    return;
+  }
+
+  const {data:b,error:be}=await db.from("businesses")
+    .insert({name:business,address:address})
+    .select()
+    .single();
+
+  if(be){
+    message("setupMessage","We couldn't save the business: "+be.message);
+    return;
+  }
+
+  const {error:se}=await db.from("staff").insert({
+    auth_user_id:user.id,
+    business_id:b.id,
+    name:name,
+    working:true,
+    approved:true
+  });
+
+  if(se){
+    message("setupMessage","The business was saved, but your staff profile couldn't be saved: "+se.message);
+    return;
+  }
+
+  localStorage.removeItem("townWatchPendingRegistration");
+  await loadUser();
+}
+
 function showOnly(id){
-  ["authScreen","homeScreen","incidentScreen","confirmScreen","alertsScreen"].forEach(x=>$(x).classList.add("hidden"));
+  ["authScreen","setupScreen","homeScreen","incidentScreen","confirmScreen","alertsScreen"].forEach(x=>$(x).classList.add("hidden"));
   $(id).classList.remove("hidden");
 }
 function goHome(){showOnly("homeScreen")}
