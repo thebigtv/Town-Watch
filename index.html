@@ -152,19 +152,59 @@ function showAuth(mode){
   $("registerTab").classList.toggle("active", mode==="register");
 }
 
+async function finishRegistration(user, pending){
+  if(!user || !pending) return false;
+
+  const {data:b,error:be}=await db.from("businesses").insert({name:pending.business,address:pending.address}).select().single();
+  if(be){
+    message("registerMessage","Your account is confirmed, but we couldn't save the business: "+be.message);
+    return false;
+  }
+
+  const {error:se}=await db.from("staff").insert({
+    auth_user_id:user.id,
+    business_id:b.id,
+    name:pending.name,
+    working:true,
+    approved:true
+  });
+
+  if(se){
+    message("registerMessage","The business was saved, but your staff profile couldn't be saved: "+se.message);
+    return false;
+  }
+
+  localStorage.removeItem("townWatchPendingRegistration");
+  return true;
+}
+
 async function register(){
   const business=$("regBusiness").value.trim(), address=$("regAddress").value.trim(), name=$("regName").value.trim(), email=$("regEmail").value.trim(), password=$("regPassword").value;
   if(!business||!address||!name||!email||!password){message("registerMessage","Please complete all fields.");return}
   if(password.length<6){message("registerMessage","Password must be at least 6 characters.");return}
-  const {data,error}=await db.auth.signUp({email,password});
-  if(error){message("registerMessage",error.message);return}
-  if(!data.user){message("registerMessage","Registration started. Check your email to continue.","success");return}
-  const {data:b,error:be}=await db.from("businesses").insert({name:business,address}).select().single();
-  if(be){message("registerMessage","Account created, but the business could not be saved: "+be.message);return}
-  const {error:se}=await db.from("staff").insert({auth_user_id:data.user.id,business_id:b.id,name,working:true,approved:true});
-  if(se){message("registerMessage","Business created, but your staff profile could not be saved: "+se.message);return}
-  message("registerMessage","You're registered. Signing you in now.","success");
-  await loadUser();
+
+  const pending={business,address,name,email};
+  localStorage.setItem("townWatchPendingRegistration",JSON.stringify(pending));
+
+  const {data,error}=await db.auth.signUp({
+    email,
+    password,
+    options:{emailRedirectTo:window.location.origin}
+  });
+
+  if(error){
+    localStorage.removeItem("townWatchPendingRegistration");
+    message("registerMessage",error.message);
+    return;
+  }
+
+  if(data.session && data.user){
+    const ok=await finishRegistration(data.user,pending);
+    if(ok){message("registerMessage","You're registered. Signing you in now.","success");await loadUser();}
+    return;
+  }
+
+  message("registerMessage","Account created. Check your email and click the confirmation link. Then return here and sign in.","success");
 }
 
 async function login(){
@@ -178,8 +218,31 @@ async function login(){
 async function loadUser(){
   const {data:{user}}=await db.auth.getUser();
   if(!user){showAuth("login");return}
+
   const {data:staff,error}=await db.from("staff").select("id,name,working,business_id,approved,businesses(id,name,address)").eq("auth_user_id",user.id).maybeSingle();
-  if(error||!staff){message("loginMessage","Your account exists but your Town Watch profile could not be found. "+(error?.message||""));return}
+
+  if(error){
+    message("loginMessage","We couldn't load your Town Watch profile: "+error.message);
+    return;
+  }
+
+  if(!staff){
+    const raw=localStorage.getItem("townWatchPendingRegistration");
+    if(raw){
+      try{
+        const pending=JSON.parse(raw);
+        if(pending.email && pending.email.toLowerCase()===String(user.email||"").toLowerCase()){
+          message("loginMessage","Your email is confirmed. Setting up your Town Watch profile...","success");
+          const ok=await finishRegistration(user,pending);
+          if(ok){await loadUser();}
+          return;
+        }
+      }catch(e){}
+    }
+    message("loginMessage","Your account exists, but your Town Watch profile has not been set up yet.");
+    return;
+  }
+
   if(!staff.approved){message("loginMessage","Your Town Watch registration is awaiting approval.");return}
   currentStaff=staff;
   currentBusiness=staff.businesses;
